@@ -1,16 +1,30 @@
 package shifthealth;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import shifthealth.drivers.ConfigurationDriver;
+import shifthealth.drivers.DatabaseDriver;
+import shifthealth.drivers.SQSDriver;
+import shifthealth.drivers.TickiTDriver;
 
 public class Main {
 
-    private static Logger log = LoggerFactory.getLogger(Main.class);
-
     public static void main(String[] args) {
 
-        log.info("Welcome to Shift Health NextGen Connector");
+        Global.log.info("Welcome to Shift Health NextGen Connector");
 
-        DeployChecker.main(args);
+        // TODO separate tests from main loop
+
+        Global.log.info("Healthcheck started");
+
+        boolean ok = true;
+
+        if (ok) ok &= ConfigurationDriver.testSettings();
+        if (ok) ok &= SQSDriver.testSQS();
+        if (ok) ok &= DatabaseDriver.testDatabase();
+        if (ok) ok &= TickiTDriver.testRESTTickit();
+
+        if (ok)
+            Global.log.info("All tests passed.");
+        else
+            Global.log.error("One of more tests failed - cannot proceed.");
     }
 }
