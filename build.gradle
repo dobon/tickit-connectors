@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+version = '1.0'
+mainClassName = 'shifthealth.Main'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.3'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.2'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.21'
+    compile group: "org.cfg4j", name:"cfg4j-core", version: "4.4.0"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+jar {
+    baseName = 'shifthealth-nextgen'
+    version =  '0.1.0'
+    manifest {
+             attributes 'Main-Class': mainClassName
+    }
+}
+
+task fatJar(type: Jar) {
+     manifest {
+        attributes 'Implementation-Title': 'Shift Health NextGen Connector',
+                   'Implementation-Version': version,
+                   'Main-Class': mainClassName
+    }
+    baseName = 'shifthealth-nextgen'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
