@@ -25,6 +25,6 @@ public class Main {
         if (ok)
             Global.log.info("All tests passed.");
         else
-            Global.log.error("One of more tests failed - cannot proceed.");
+            Global.log.error("One or more tests failed - cannot proceed.");
     }
 }
